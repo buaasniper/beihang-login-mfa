@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "terser fingerprint.js collector.js -o guard.core.js -c -m --toplevel && echo '✅ Build Success!'"
+  }
+}

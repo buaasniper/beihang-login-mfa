@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title i18n="systemname">统一身份认证</title>
+    <link rel="stylesheet" href="lib/index-normal.css?v2007121">
+    <link rel="stylesheet" href="css/login.css?v2007121">
+</head>
+<body style="display: none;">
+
+    <div class="banner auto" id="banner">
+
+        <ul>
+           <li style="background-position:center top;background-size:cover;"></li>
+        </ul>
+    </div>
+
+
+    <div class="sidebar auto">
+        <div class="sidebar-con auto">
+            
+            <div class="header auto">
+                <div class="logo fl"><img src="img/logo-full.png" alt=""></div>
+                <div class="lan fr default-color" i18n="language">
+                    中文 | <a href="javascript:void(0);" onclick="console.log('Demo环境：忽略语言切换')">EN</a>
+                </div>
+            </div>
+
+            <div class="title auto">
+                <span i18n="systemname">统一身份认证登录</span>
+                <p class="default-color" id="systemdesc">个人中心</p>
+                <p style="font-size: 20px; color: red;" id="systemwarn" hidden>本平台为互联网非涉密平台<br/>严禁处理、传输国家秘密</p>
+            </div>
+
+            <div class="content auto">
+                <div class="content-title auto" id="content-title">
+                    <a href="javascript:;" class="active default-color default-border" i18n="login.type.password">密码登录</a>
+                    <a href="javascript:;" style="display:none" i18n="login.type.sms">短信登录</a>
+                    <a href="javascript:;" style="display:none" i18n="login.type.qrcode">扫码登录</a>
+                </div>
+                <div class="content-con auto" id="content-con">
+                    <div class="content-con-box auto">
+                        <div class="item auto">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/username.png" alt="">
+                                </div>
+                                <input type="text" placeholder="请输入学工号" i18n="login.form.schoolid.placeholder" id="unPassword" name="username">
+                            </div>
+                        </div>
+                        <div class="item-validate auto"></div>
+                        <div class="item auto">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/password.png" alt="">
+                                </div>
+                                <input type="password" placeholder="请输入密码" i18n="login.form.password.placeholder" id="pwPassword" name="password">
+                            </div>
+                        </div>
+                        <div class="item-validate auto" style="display: none;"></div>
+                        <div class="item item-code auto" style="display: none;" id="captchaPasswor">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/password.png" alt="">
+                                </div>
+                                <input placeholder="请输入验证码" i18n="login.form.captcha.placeholder" id="cptPassword">
+                            </div>
+                            <img class="code" alt="" onclick="refreshCaptcha()">
+                        </div>
+                        <div class="item-validate auto" id="errPassword"></div>
+                        <div class="item auto">
+                            <input type="button" class="submit-btn default-bgcolor" value="登录" i18n="login.form.btn.login" onclick="loginPassword()">
+                        </div>
+
+                        <div class="rules">
+                            <a href="javascript:;" id="openRules">《用户使用协议》</a>
+                        </div>
+                        <div class="links auto">
+                            <a href="https://uc.buaa.edu.cn/#/reset/index" target="_blank" class="default-color" i18n="link.forgetpass">忘记密码</a>
+                            <a href="https://uc.buaa.edu.cn/#/register/index" target="_blank" class="default-color" i18n="link.signin">立即激活</a>
+                            <a href="https://uc.buaa.edu.cn/#/user/login" target="_blank" class="default-color" i18n="link.usercenter">个人中心</a>
+                        </div>
+                    </div>
+                    <div class="content-con-box auto" style="display: none">
+                        <div class="item auto">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/username.png" alt="">
+                                </div>
+                                <input type="text" placeholder="请输入学工号" i18n="login.form.code.username" id="unSmsToken">
+                            </div>
+                        </div>
+                        <div class="item-validate auto"></div>
+                        <div class="item item-code auto">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/password.png" alt="">
+                                </div>
+                                <input type="password" placeholder="请输入短信验证码" i18n="login.form.code.placeholder" id="pwSmsToken">
+                            </div>
+                            <a href="javascript:sendToken();" class="getcode default-color default-border-1px" i18n="login.form.code.get" id="btnSms">获取验证码</a>
+                        </div>
+                        <div class="item-validate auto" style="display: none;"></div>
+                        <div class="item item-code auto" style="display: none;" id="captchaSmsToken">
+                            <div class="item-box auto">
+                                <div class="item-label auto">
+                                    <img src="img/password.png" alt="">
+                                </div>
+                                <input placeholder="请输入验证码" i18n="login.form.captcha.placeholder" id="cptSmsToken">
+                            </div>
+                            <img class="code" alt="" onclick="refreshCaptcha()">
+                        </div>
+                        <div class="item-validate auto" id="errSmsToken"></div>
+                        <div class="item auto">
+                            <input type="button" class="submit-btn default-bgcolor" value="登录" i18n="login.form.btn.login" onclick="loginSmsToken()">
+                        </div>
+                        <div class="links auto">
+                            <a href="https://uc.buaa.edu.cn/#/reset/index" target="_blank" class="default-color" i18n="link.forgetpass">忘记密码</a>
+                            <a href="https://uc.buaa.edu.cn/#/register/index" target="_blank" class="default-color" i18n="link.signin">立即激活</a>
+                            <a href="https://uc.buaa.edu.cn/#/user/login" target="_blank" class="default-color" i18n="link.usercenter">个人中心</a>
+                        </div>
+                    </div>
+                    <div class="content-con-box auto" style="display: none">
+                        <div class="qrcode auto" style="display: none;" id="codeQR_PIC"></div>
+                        <div class="qrcode auto" id="qrRefresh">
+                            <img src="img/qr.png" alt="" >
+                            <div class="refresh auto">
+                                <p i18n="login.form.qrcode.tips">二维码已失效</p>
+                                <input type="button" class="refresh-btn default-bgcolor" value="请点击刷新" i18n="login.form.btn.refresh">
+                            </div>
+                        </div>
+                        <div class="qrcode-tips auto">
+                            <span i18n="login.form.qrcode.text1">请使用企业微信扫描二维码登录</span>
+                            <span i18n="login.form.qrcode.text2">“统一认证”</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer auto">
+                <ul>
+                    <li i18n="copyright.icp">北京航空航天大学 © 2020    京ICP备05004617-3</li>
+                    <li i18n="copyright.support">技术支持：信息化建设与管理办公室 电话：028-8541xxxx</li>
+                    <li i18n="copyright.browser">浏览器支持：谷歌、360浏览器 (6.0+极速) IE (8.0+)</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="dialog" id="dialogRules">
+        <div class="dialog-box">
+            <div class="dialog-title">
+                <span>欢迎使用北京航空航天大学统一身份认证系统！</span>
+                <a href="javascript:;" id="dialogBtnCancel2">X</a>
+            </div>
+            <div class="dialog-con" id="dialog-con">
+您在使用北京航空航天大学统一身份认证系统服务前，应当仔细阅读<a href="https://privacy.buaa.edu.cn/index/bjhkhtdxtysfrzxt.htm" target="_blank">《北京航空航天大学统一身份认证系统服务协议》</a>（下称“本协议”）中全部条款及<a href="https://privacy.buaa.edu.cn/index/bjhkhtdxtysfrzxtyszc.htm" target="_blank">《北京航空航天大学统一身份认证系统隐私政策》</a>。请您务必审慎阅读、充分理解各条款内容，特别是免除或限制责任的相应条款，限制、免责条款将以加粗形式提示您注意。<br><br>
+除非您已阅读并接受本协议及相关协议的所有条款，否则您将被限制使用本服务。您对本服务的注册、登录、查看、发布信息、账号管理等行为即视为您已阅读并同意本协议的约束，且具有使用北京航空航天大学统一身份认证系统服务的相应权利能力和行为能力，并可以对自己的行为承担法律责任。您清楚知悉并理解，因实际需要，北京航空航天大学统一身份认证系统有权在必要时对本协议条款进行修改。北京航空航天大学统一身份认证系统可能会以包括但不限于在页面更新、网页公告、网页提示、站内信、通知等方式中的一种或多种，向您送达关于修改后的协议以及本服务的各种规则、提示等，您可随时查询最新内容。如不同意本服务协议及/或对本服务协议的修改，您可以不接受。如果您继续使用北京航空航天大学统一身份认证系统服务，即视为您已了解并完全同意修改后协议及各种规则、通知的内容。<br><br>
+您清楚知悉并理解，开通或使用某项特殊服务可能需要您单独确认并同意某项具体协议，您可以选择接受或不接受。如果您接受该特殊服务的具体协议，则您需要同时受到本协议和该特殊服务的具体协议的约束。<br><br>
+如果您未满14周岁，请在法定监护人的陪同下阅读本协议及其他上述协议，并特别注意未成年人使用条款。若您违反前述约定，您及您的监护人应依法承担因此而导致的一切后果。<br><br>
+一、协议的范围<br><br>
+1.1 本协议是您与北京航空航天大学之间关于您使用北京航空航天大学统一身份认证系统服务所订立的协议。“用户”是指注册、登录、使用北京航空航天大学统一身份认证系统账号的个人，在本协议中更多地称为“您”。<br><br>
+1.2“北京航空航天大学统一身份认证系统”是北京航空航天大学向用户提供的统一用户管理、身份配给和身份认证体系系统。您可以通过您在北京航空航天大学统一身份认证系统注册的用户登录校内所有接入统一身份认证体系的系统，以下简称“本服务”。<br><br>
+1.3 本协议内容同时包括北京航空航天大学可能不断发布的关于本服务的相关协议、服务声明及公告指引等内容（以下统称为“专项规则”）。上述内容一经正式发布，即为本协议不可分割的重要组成部分，您同样应当遵守。<br><br>
+二、账号注册与认证<br><br>
+2.1 您在使用本服务前需要注册一个统一身份认证账号。北京航空航天大学有权根据用户需求和统一身份认证系统产品需要对账号注册和绑定的方式进行变更。<br><br>
+2.2 北京航空航天大学统一身份认证系统账号注册采用实名制，用户应当如实填写和提交账号注册与认证资料，完成信息登记，并对资料的真实性、合法性、准确性和有效性承担全部法律责任。北京航空航天大学依据您填写和提交的账号资料，在法律允许的范围内向其他用户展示您的注册信息。<br><br>
+三、用户个人信息保护<br><br>
+3.1 保护用户个人信息是北京航空航天大学的一项基本原则，北京航空航天大学将会采取合理的措施保护用户的个人信息。除法律法规规定的情形外，未经用户许可北京航空航天大学不会向第三方公开、透露用户个人信息。北京航空航天大学对相关信息采用专业加密存储与传输方式，保障用户个人信息的安全。更多关于用户个人信息保护的内容，您可查看《北京航空航天大学统一身份认证系统隐私政策》。<br><br>
+3.2 您在申请本服务过程中，需要填写一些必要的信息，请保持这些信息的真实、准确、合法、有效并注意及时更新，以便北京航空航天大学向您提供及时有效的帮助，或更好地为您提供服务。根据相关法律法规和政策，请您填写真实的身份信息。若您填写的信息不完整或不准确，则可能无法使用本服务或在使用过程中受到限制。<br><br>
+3.3 一般情况下，您可随时浏览、修改自己提交的信息，可以在统一认证登录页面点击“忘记密码”来修改您的密码，但出于安全性和身份识别（如账号申诉服务）的考虑，您无法修改注册时提供的初始注册信息及其他验证信息。<br><br>
+3.4 北京航空航天大学将运用各种安全技术和程序建立完善的管理制度来保护您的个人信息，以免遭受未经授权的访问、使用或披露。<br><br>
+3.5 未经您的同意，北京航空航天大学不会向北京航空航天大学以外的任何公司、组织和个人披露您的个人信息，但法律法规另有规定的除外。<br><br>
+3.6 北京航空航天大学非常重视对未成年人个人信息的保护。若您是14周岁以下的未成年人，在使用北京航空航天大学的服务前，应事先取得您家长或法定监护人的书面同意。<br><br>
+四、用户行为规范<br><br>
+4.1 信息内容规范<br><br>
+4.1.1 本协议所述信息内容是指用户使用本服务过程中所制作、复制、发布、传播的任何内容，包括但不限于通过北京航空航天大学统一身份认证系统账号进行实名注册、核验学籍、完善个人信息、上传人脸照片，以文字、语音、图片、视频、图文等发送、回复信息，以及其他使用北京航空航天大学统一身份认证系统账号登录的系统平台服务所产生的内容，也称“北京航空航天大学统一身份认证系统信息内容”。<br><br>
+4.1.2 您理解并同意，北京航空航天大学统一身份认证系统为统一用户管理、身份配给和身份认证体系系统，您不得利用北京航空航天大学统一身份认证系统账号登录的系统平台服务制作、复制、发布、传播违反法律法规规定以及侵犯其他用户或第三方合法权益的内容。<br><br>
+4.2 平台使用规范<br><br>
+4.2.1 本条所述平台使用是指用户使用本服务所进行的任何行为，包括但不限于注册登录以及其他使用北京航空航天大学统一身份认证系统账号登录的系统平台服务所进行的行为。<br><br>
+4.2.2 您不得利用北京航空航天大学统一身份认证系统账号登录的系统平台服务进行如下行为：<br><br>
+4.2.2.1 提交、发布虚假信息；<br><br>
+4.2.2.2 侵害他人名誉权、肖像权、知识产权、商业秘密等合法权利；<br><br>
+4.2.2.3 用未经北京航空航天大学授权或许可的任何插件、外挂、系统或第三方工具对北京航空航天大学统一身份认证系统及相关服务的正常运行进行干扰、破坏、修改或施加其他影响；<br><br>
+4.2.2.4 利用北京航空航天大学统一身份认证系统账号登录的系统平台服务从事任何违法犯罪活动；<br><br>
+4.2.2.5 任何导致或可能导致北京航空航天大学与第三方产生纠纷、争议或诉讼的行为。<br><br>
+4.3对自己行为负责<br><br>
+4.3.1 您理解并同意，北京航空航天大学统一身份认证系统仅为用户管理、身份认证的平台，您通过北京航空航天大学统一认证账号所登陆的系统平台上的言行必须遵守《中华人民共和国网络安全法》、《计算机信息网络国际联网安全保护管理办法》、《互联网信息服务管理办法》、《互联网电子公告服务管理规定》、《维护互联网安全的决定》等相关法律法规，遵守公共秩序、社会公德和北京航空航天大学平台政策，不得进行任何违法或不正当的活动，包括但不限于:<br><br>
+4.3.1.1 反对宪法所确定的基本原则的；<br><br>
+4.3.1.2 危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的；<br><br>
+4.3.1.3 损害国家荣誉和利益的；<br><br>
+4.3.1.4 煽动民族仇恨、民族歧视、破坏民族团结的；<br><br>
+4.3.1.5 破坏国家宗教政策，宣扬邪教和封建迷信的；<br><br>
+4.3.1.6 散布谣言，扰乱社会秩序，破坏社会稳定的；<br><br>
+4.3.1.7 散布淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的；<br><br>
+4.3.1.8煽动非法集会、结社、游行、示威、以非法民间组织名义活动、聚众扰乱社会秩序的；<br><br>
+4.3.1.9 发布、传送、传播、储存侵害他人名誉权、肖像权、知识产权、商业秘密等合法权益的内容；<br><br>
+4.3.1.10 侮辱或者诽谤他人，侵害他人合法权利的；<br><br>
+4.3.1.11其他违反中国法律法规、规章、条例以及任何具有法律效力之规范的。<br><br>
+为了促进互联网内容健康发展，您通过北京航空航天大学统一认证账号登录的系统平台上的全部行为应符合法律法规底线、社会主义制度底线、国家利益底线、公民合法权益底线、社会公共秩序底线、道德风尚底线、信息真实性底线。您须为账号下的一切行为负责，包括您所发表的任何内容以及由此产生的任何后果。您应对本服务中的内容自行加以判断，并承担因使用内容而引起的所有风险，包括因对内容的合法性、正确性、完整性和实用性的依赖而产生的风险。北京航空航天大学无法且不会对因前述风险而导致的任何损失或损害承担责任。<br><br>
+4.3.2 您充分知晓并保证您通过北京航空航天大学统一身份认证账号上传、发布的内容享有合法权益，若发布的内容发生权利纠纷或侵犯了任何第三方的合法权益，由您承担全部法律责任。<br><br>
+五、账号管理<br><br>
+5.1 北京航空航天大学统一身份认证系统账号的所有权归北京航空航天大学所有，用户完成申请注册手续后，获得北京航空航天大学统一身份认证系统账号的使用权，该使用权仅属于初始申请注册主体。账号使用权禁止赠与、借用、租用、转让或售卖。<br><br>
+5.2 北京航空航天大学统一身份认证系统账号密码由您自行设定。北京航空航天大学特别提醒您应妥善保管您的账号和密码。北京航空航天大学与您共同负有维护账号安全的责任。北京航空航天大学会采取并不断更新技术措施，努力保护您的账号在服务器端的安全。您需要采取特定措施保护您的账号安全，包括但不限于妥善保管北京航空航天大学统一身份认证系统账号与密码、安装防病毒木马软件、定期更改密码等措施。当您使用完毕后，应安全退出。您同意在任何情况下不向他人透露账号或密码信息。因您保管不善可能导致账号被他人使用（包括但不限于遭受盗号、密码失窃）或信息数据泄漏，责任由您自行承担。您理解并同意，在您未进行投诉或提出账号申诉等方式明确告知北京航空航天大学其统一身份认证系统账号被他人使用或信息数据泄漏等情况并提供相关证明材料前，北京航空航天大学有理由相信该账号行为是您使用账号的行为。<br><br>
+5.3 在您怀疑他人在使用您的账号或密码时，您同意立即通知北京航空航天大学。如果您当前使用的北京航空航天大学统一身份认证系统账号并不是您初始申请注册的或者通过北京航空航天大学提供的其他途径获得的，但您却知悉该账号当前的密码，您不得用该账号登录或进行任何操作，并请您在第一时间通知北京航空航天大学或者该账号的初始申请注册主体。如果北京航空航天大学发现您并非该账号初始申请注册主体，北京航空航天大学有权在未经通知的情况下终止您使用该账号。<br><br>
+5.4 如您违反相关法律法规、本协议以及专项规则（如有）的规定，北京航空航天大学有权进行独立判断并随时限制、冻结或终止您对北京航空航天大学统一身份认证系统账号的使用，且根据实际情况决定是否恢复使用。由此给您带来的损失（包括但不限于用户资料及相关数据清空等），由您自行承担。<br><br>
+5.5您充分了解并认同，如果您的注册账号行为与发布内容存在以下情形，北京航空航天大学一经发现将终止您对北京航空航天大学统一身份认证系统账号的使用，并保留追求法律责任的权利：<br><br>
+5.5.1  发布含有违反国家法律法规的内容的；<br><br>
+5.5.2  发布含有与事实不符，且造成恶劣影响的内容的；<br><br>
+5.5.3  发布含有色情低俗、且造成恶劣影响的内容的。<br><br>
+5.6 如果您的北京航空航天大学统一身份认证系统账号被盗、密码遗忘或因其他原因导致无法正常登录，您可以按照北京航空航天大学的申诉途径进行申诉。北京航空航天大学并不承诺您一定能通过申诉找回账号。<br><br>
+5.7 您理解并认可在使用北京航空航天大学统一身份认证系统过程中，您需提供真实的个人信息，若您提供的个人信息无法或不足以确认为我校校友身份，或个人信息不准确、不真实或含有违法或不良信息，北京航空航天大学有权终止对您的服务，且不需承担任何责任。<br><br>
+六、数据的储存<br><br>
+6.1 北京航空航天大学不对您在本服务中相关数据的删除或储存失败负责。<br><br>
+6.2 北京航空航天大学有权根据实际情况自行决定单个用户在本服务中数据的最长储存期限，并在服务器上为其分配数据最大存储空间等。您可根据自己的需要自行备份本服务中的相关数据。<br><br>
+6.3 如果您停止使用本服务或服务被终止或取消，北京航空航天大学可以从服务器上永久地删除您的数据。在服务停止、终止或取消后，北京航空航天大学没有义务向您返还任何数据。<br><br>
+七、风险及免责<br><br>
+7.1 您理解并同意：为了向您提供有效的服务，本服务会利用您终端设备的处理器和带宽等资源。本服务使用过程中可能产生数据流量的费用，用户需自行向运营商了解相关资费信息，并自行承担相关费用。<br><br>
+7.2 用户在使用本服务时，须自行承担如下北京航空航天大学不可掌控的风险内容，包括但不限于：<br><br>
+7.2.1 由于受到计算机病毒、木马或其他恶意程序、黑客攻击的破坏等不可抗拒因素可能引起的信息丢失、泄漏等风险；<br><br>
+7.2.2 用户或北京航空航天大学的电脑软件、系统、硬件和通信线路出现故障；<br><br>
+7.2.3 用户操作不当或通过非北京航空航天大学授权的方式使用本服务；<br><br>
+7.2.4 用户通过北京航空航天大学统一身份认证账号登录的系统平台，发布的内容被他人转发、分享，因此等传播可能带来的风险和责任；<br><br>
+7.2.5 由于网络信号不稳定等原因，所引起的北京航空航天大学统一身份认证系统登录失败、资料同步不完整、页面打开速度慢等风险；<br><br>
+7.2.6 其他北京航空航天大学无法控制或合理预见的情形。<br><br>
+7.3 您理解并同意，用户通过北京航空航天大学统一身份认证账号登录的系统发布的内容可能会被其他用户或第三方复制、转载、修改或做其他用途，脱离您的预期和控制，用户应充分意识到此类风险的存在，任何您不愿被他人获知的信息都不应在北京航空航天大学统一身份认证账号登录的系统平台上发布。如果相关行为侵犯了您的合法权益，您可以向北京航空航天大学统一身份认证系统投诉，我们将依法进行处理。<br><br>
+7.4 北京航空航天大学依据本协议约定获得处理违法违规内容或行为的权利，该权利不构成北京航空航天大学的义务或承诺，北京航空航天大学不能保证及时发现违法违规情形或进行相应处理。<br><br>
+7.5 您理解并同意，北京航空航天大学保留单方面对本服务的全部或部分服务内容在任何时候不经任何通知的情况下变更、暂停、限制、终止或撤销的权利，用户需承担此风险。<br><br>
+八、知识产权声明<br><br>
+8.1 北京航空航天大学在本服务中提供的内容（包括但不限于网页、文字、图片、音频、视频、图表等）的知识产权归北京航空航天大学所有。除另有特别声明外，北京航空航天大学提供本服务时所依托软件的著作权、专利权及其他知识产权均归北京航空航天大学所有。<br><br>
+8.2 用户在使用本服务中上传、发布的内容的知识产权归用户或相关权利人所有。<br><br>
+8.3 上述及其他任何本服务包含的内容的知识产权均受到法律保护，其他未经北京航空航天大学、用户或相关权利人许可的第三人，不得以任何形式进行使用或创造相关衍生作品。<br><br>
+8.4 任何未经北京航空航天大学书面同意及权利人许可的非法获取行为，均属违法侵权行为。您确认并同意，为及时、有效地保障您基于本服务的合法权益，您特别授权北京航空航天大学在发现您的合法权益（包括但不限于信息网络传播权、著作权等）可能受到侵害时，北京航空航天大学有权以自己的名义或委托专业第三方机构代您向涉嫌侵权的第三人采取法律手段进行维权，特别授权采取的维权手段包括但不限于侵权监控、发函警告、行政举报、提起诉讼、申请仲裁、移送检察机关处理、调解、和解等。<br><br>
+8.5 您理解并且同意，为持续改善北京航空航天大学为您提供的各项服务，除非有相反证明，您使用北京航空航天大学统一身份认证账号登录的系统平台上的服务上传、发布或传输内容即代表了您有权且同意在全世界范围内，永久性的、不可撤销的、免费的授予我方对该内容的存储、使用、发布、复制、修改、改编、出版、翻译、据以创作衍生作品、传播、表演和展示等权利；将内容的全部或部分编入其他任何形式的作品、媒体、技术中的权利；以及再授权给其他第三方以上述方式使用的权利。<br><br>
+8.6 本服务所包含的内容的知识产权均受到法律保护，未经过北京航空航天大学、用户或相关权利人书面许可，任何人不得以任何形式进行使用或创造相关衍生作品。<br><br>
+九、法律责任<br><br>
+9.1 如果北京航空航天大学发现或收到他人投诉用户违反本协议约定的，北京航空航天大学有权不经通知随时对相关内容进行删除、屏蔽，并视行为情节对违规账号处以包括但不限于警告、删除部分或全部关注用户、限制或禁止使用部分或全部功能、账号封禁直至注销的处罚且无需承担任何责任，并公告处理结果。北京航空航天大学也有权依照本协议及专项规则的规定，拒绝再向该主体提供服务。如果您发现任何人违反本协议规定或以其他不当的方式使用北京航空航天大学统一身份认证系统服务，请立即向北京航空航天大学统一身份认证系统投诉，我们将依法进行处理。<br><br>
+9.2 您理解并同意，北京航空航天大学有权依据合理判断对违反有关法律法规或本协议规定的行为进行处罚，对违法违规的任何人士采取适当的法律行动，并依据法律法规保存有关信息向有关部门报告等，用户应独自承担由此而产生的一切法律责任。<br><br>
+9.3 您理解并同意，因您违反本协议或相关服务条款的规定，导致或产生第三方主张的任何索赔、要求或损失，您应当独立承担责任；北京航空航天大学因此遭受损失的，您也应当一并赔偿，损失包括但不限于诉讼费用、律师费用、和解费用、罚款或生效法律文书中规定的损害赔偿金额及其他直接或间接支出费用。<br><br>
+9.4 您理解并同意，为及时保障用户合法权益不受侵害，若您的北京航空航天大学统一身份认证系统账号存在权益纠纷，北京航空航天大学有权根据情况，采取包括但不限于暂停、冻结该北京航空航天大学统一身份认证系统账号的部分或全部功能等保护措施，直至有权机关做出生效裁判或用户在不违反本协议的前提下协商一致，并且由此所产生的一切法律责任均与北京航空航天大学无关。<br><br>
+十、联系我们<br><br>
+如您对本政策有任何疑问、意见或建议，或者您在管理您的个人信息时遇到任何问题需要解决或申诉，您可通过我们提供的多种反馈渠道与我们联系：<br><br>
+10.1您的个人信息相关咨询、投诉问题，可通过在线客服与我们取得联系。<br><br>
+10.2如您对本政策内容有任何疑问、意见或建议，可通过以下方式与我们取得联系：<br><br>
+联系人：北航信息化办公室<br><br>
+联系方式：010-82317005<br><br>
+联系地址：北京市海淀区学院路37号北京航空航天大学。<br><br>
+十一、其它<br><br>
+11.1 您使用本服务即视为您已阅读并同意受本协议的约束。北京航空航天大学有权在必要时修改本协议条款。您可以在相关服务页面查阅最新版本的条款。本协议条款变更后，如果您继续使用北京航空航天大学统一身份认证系统服务，即视为您已接受修改后的协议。如果您不接受修改后的协议，应当停止使用北京航空航天大学统一身份认证系统服务。<br><br>
+11.2 本协议签订地为中华人民共和国北京市海淀区。<br><br>
+11.3 本协议的成立、生效、履行、解释及纠纷解决，适用中华人民共和国大陆地区法律（不包括冲突法）。<br><br>
+11.4 若您和北京航空航天大学之间发生任何纠纷或争议，首先应友好协商解决；协商不成的，您同意将纠纷或争议提交北京市海淀区人民法院管辖。<br><br>
+11.5 本协议所有条款的标题仅为阅读方便，本身并无实际涵义，不能作为本协议涵义解释的依据。<br><br>
+11.6 本协议条款无论因何种原因部分无效或不可执行，其余条款仍有效，对双方具有约束力。<br><br>
+            </div>
+            <div class="dialog-footer" id="dialogFooter">
+                <!-- <div class="dialog-footer-left">
+                    <span>*</
+                    span>
+                    请阅读到最底端
+                </div> -->
+                <div class="dialog-footer-right">
+                    <a href="javascript:;" id="dialogBtnCancel">取消</a>
+                    <a href="javascript:;" style="display: none;" class="dialog-footer-btn2" id="dialog-btn1">我已阅读并同意</a>
+                    <a href="javascript:;" class="dialog-footer-btn2 dialog-footer-btn3" id="dialog-btn2" @click="submitRules">我已阅读并同意</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery.i18n.js"></script>
+<script type="text/javascript" src="messages/zh_cn.js"></script>
+<script type="text/javascript" src="messages/en.js"></script>
+    <script src="js/guard.core.js"></script>
+<!--<script src="js/collector.js"></script>-->
+<!--<script src="js/fingerprint.js"></script>-->
+<script src="js/qrcode.js" ></script>
+
+<script src="js/mxsocket.js"></script>
+<script type="text/javascript">
+    // ✅ 替换后的纯净配置
+    var config = {
+        locale: 'zh_cn',    // 默认语言中文
+        error: '',          // 默认没有错误信息（这样刚打开页面时是干净的）
+        service: {
+            name: '教务系统'        // 把这里留空，页面就会显示 HTML 里默认的“个人中心”或“统一身份认证”
+        }
+    };
+
+    // 初始化语言包 (这几行必须保留，否则页面上的中文会变成变量名)
+    var curMessages = window.messages[config.locale];
+    $.i18n(curMessages);
+    // ✅ 如果你想让页面刚加载时，标题显示特定文字（比如“统一身份认证”），加上这一行：
+    $("#systemdesc").text("统一身份认证");
+
+function refreshCaptcha() {
+    $("#captchaPasswor > img").attr('src', '/captcha?captchaId='+config.captcha.id+'&t='+Date.now());
+    $("#captchaSmsToken > img").attr('src', '/captcha?captchaId='+config.captcha.id+'&t='+Date.now());
+}
+if (config.captcha) {
+    $("#captchaPasswor").prev().show();
+    $("#captchaPasswor").show();
+    $("#captchaSmsToken").prev().show();
+    $("#captchaSmsToken").show();
+    refreshCaptcha();
+}
+
+// 监听协议滚动事件
+var addEvent = (function(){
+ if(window.addEventListener){
+  return function(elm, type, handle){
+   elm.addEventListener(type, handle, false);
+  }
+ }
+ if(window.attachEvent){
+   return function(elm, type, handle){
+    elm.attachEvent('on' + type, handle);
+   }
+ } 
+})();
+
+var div = document.getElementById('dialog-con');
+addEvent(div,'scroll', function(){
+ var scrollHeight = div.scrollHeight;
+ var scrollTop    = div.scrollTop;
+ var height       = div.offsetHeight;
+ if((scrollTop + height) == scrollHeight) {
+   document.getElementById('dialog-btn1').style.display = 'none'
+   document.getElementById('dialog-btn2').style.display = 'inline-block'
+ }
+});
+
+function showRules () {
+    document.getElementById('dialogFooter').style.display = 'block'
+    document.getElementById('dialogRules').style.display = 'block'
+}
+function closeRules () {
+    document.getElementById('dialogRules').style.display = 'none'
+}
+document.getElementById('dialogBtnCancel').onclick = function () {
+    closeRules()
+}
+document.getElementById('dialogBtnCancel2').onclick = function () {
+    closeRules()
+}
+function submitRules () {
+    var username = $("#unPassword").val();
+    if (username) {
+        username = username.trim();
+        
+        $.ajax({
+            url: '/privacy/' + username,
+            type: 'post',
+            success: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    closeRules()
+    loginPasswordInternal()
+}
+document.getElementById('dialog-btn2').onclick = function () {
+    closeRules()
+    submitRules()
+}
+document.getElementById('openRules').onclick = function () {
+    window.open('https://privacy.buaa.edu.cn/index/bjhkhtdxtysfrzxt.htm', '_blank')
+    showRules()
+}
+
+var tokenTTL, tokenTTLCounter;
+function updateTTL() {
+    if (tokenTTL >= 0) {
+        tokenTTL--;
+        $("#btnSms").text('(' + tokenTTL + ')')
+    } else {
+        clearInterval(tokenTTLCounter);
+        $("#btnSms").removeClass('default-disabled')
+        $("#btnSms").prop('href', 'javascript:sendToken()')
+        $("#btnSms").text(window.messages[config.locale]['login.form.code.get']);
+    }
+}
+function sendToken() {
+    $("#errSmsToken").text('');
+    var username = $("#unSmsToken").val();
+    if (username && username.trim()) {
+        $("#btnSms").prop('href', 'javascript:')
+        $("#btnSms").addClass('default-disabled')
+        $.ajax({
+            url: '/token',
+            type: 'post',
+            data: JSON.stringify({ username: username.trim() }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (res) {
+                var response = JSON.parse(res);
+                if (response.status === 'success') {
+                    tokenTTL = response.expire_in;
+                    tokenTTLCounter = setInterval(updateTTL, 1000);
+                } else if (response.message === 'not found') {
+                    $("#errSmsToken").text(window.messages[config.locale]['login.form.code.notfound']);
+                    $("#btnSms").removeClass('default-disabled')
+                    $("#btnSms").prop('href', 'javascript:sendToken()')
+                } else if (response.message === 'reach threshold') {
+                    $("#errSmsToken").text(window.messages[config.locale]['login.form.code.threshold']);
+                    $("#btnSms").removeClass('default-disabled')
+                    $("#btnSms").prop('href', 'javascript:sendToken()')
+                }
+            },
+            error: function () {
+                $("#errSmsToken").text(window.messages[config.locale]['login.form.code.errorsend']);
+                $("#btnSms").removeClass('default-disabled')
+                $("#btnSms").prop('href', 'javascript:sendToken()')
+            }
+        });
+    } else {
+        $("#btnSms").removeClass('default-disabled')
+        $("#btnSms").prop('href', 'javascript:sendToken()')
+    }
+}
+
+function loginPassword() {
+    var username = $("#unPassword").val();
+    if (username) {
+        username = username.trim();
+        loginPasswordInternal();
+        return;
+        $.ajax({
+            url: '/privacy/' + username,
+            success: function (res) {
+                if (res.status === 'approved') loginPasswordInternal();
+                else if (res.status === 'not') showRules();
+            }
+        });
+    }
+}
+
+// 这里是原来的函数声明
+function loginPasswordInternal() {
+    var username = $("#unPassword").val();
+    var password = $("#pwPassword").val();
+
+    // 简单校验
+    if (!username || !username.trim() || !password || !password.trim()) {
+        $("#errPassword").text("请输入用户名和密码");
+        return;
+    }
+
+    // 🟢 1. 开始指纹收集与登录流程
+    // 使用 async/await 方便处理异步
+    (async function() {
+        try {
+            // UI 反馈：登录中...
+            $(".submit-btn").val("登录中...").prop("disabled", true);
+            $("#errPassword").text("");
+
+            // 🟢 2. 获取环境数据
+            const clickTimeStr = window.Collector ? window.Collector.getBeijingTime() : new Date().toLocaleString();
+            const delta_time = window.Collector ? window.Collector.getDeltaTime() : 0;
+
+            // 🟢 3. 获取指纹 (Mock)
+            let fingerprint = {};
+            if (window.BotDetector && window.BotDetector.getFingerprint) {
+                try {
+                    fingerprint = await window.BotDetector.getFingerprint(username);
+                } catch (e) {
+                    console.error("指纹收集失败:", e);
+                }
+            } else {
+                console.warn("未检测到 BotDetector SDK，指纹将为空");
+            }
+
+            // 🟢 4. 发起登录请求 (POST /login)
+            const loginResponse = await fetch("/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username.trim(),
+                    password: password.trim()
+                })
+            });
+            const loginResult = await loginResponse.json();
+
+            if (loginResult.success) {
+                // 🟢 5. 登录成功 -> 上报指纹数据
+                await fetch("/fingerprint", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username.trim(),
+                        fingerprint: fingerprint,
+                        url: window.location.href,
+                        delta_time: delta_time,
+                        click_time: clickTimeStr
+                    })
+                });
+
+                // 🟢 6. 成功后的跳转
+                 alert("登录成功！");
+                // 不跳转
+            } else {
+                // 🔴 7. 登录失败处理
+                $("#errPassword").text(loginResult.message || "用户名或密码错误");
+            }
+
+        } catch (e) {
+            console.error(e);
+            $("#errPassword").text("系统连接失败，请稍后重试");
+        } finally {
+            // 恢复按钮状态
+            $(".submit-btn").val("登录").prop("disabled", false);
+        }
+    })();
+}
+
+$('#unPassword,#pwPassword,#cptPassword').on('keyup', function (e) {
+    if (e.keyCode === 13) {
+        loginPassword();
+    }
+});
+$('#unSmsToken,#pwSmsToken,#cptSmsToken').on('keyup', function (e) {
+    if (e.keyCode === 13) {
+        loginSmsToken();
+    }
+});
+
+// function getState() {
+//     var uri = '/clientredirect?client_name=mc-qr&javax.faces.partial.ajax=true';
+//     if (config.service) {
+//         uri = uri + '&service=' + encodeURIComponent(config.service.href);
+//     }
+//     var state;
+//     $.ajax({
+//         type: 'get',
+//         url: uri,
+//         success: function (res) {
+//             var parser = new DOMParser();
+//             var xmlDoc = parser.parseFromString(res, 'text/xml');
+//             var url = xmlDoc.getElementsByTagName('redirect')[0].getAttribute('url');
+//             state = parent.getParameterByName('state', url);
+//         },
+//         async: false
+//     });
+//     return state;
+// }
+function initQR() {
+    console.log("二维码登录功能已禁用");
+}
+
+//登录方式切换
+$('#content-title a').on('click', function () {
+    var index = $(this).index();
+    var length = $('#content-title a').length;
+    for (var x = 0; x < length; x++) {
+        if (x === index) {
+            $('#content-con div.content-con-box').eq(index).show()
+            $('#content-title a').eq(index).addClass('active default-color default-border')
+        } else {
+            $('#content-con div.content-con-box').eq(x).hide()
+            $('#content-title a').eq(x).removeClass('active default-color default-border')
+        }
+    }
+    if (index === 2) {
+        initQR();
+    }
+})
+
+
+if (typeof __vpn_hostname_data !== 'undefined') {
+    console.log("d.buaa");
+    setTimeout(function() {refreshCaptcha();}, 1000);
+}
+
+</script>
+</body>
+</html>
