@@ -1,5 +1,8 @@
 # 北航登录 MFA 工作汇报
 
+## 会议时间
+每周四晚上 9:00
+
 > 使用说明
 >
 > - 这个文件长期持续使用，不每周新建
@@ -75,4 +78,15 @@
 3. 新增feature
 4. 版本号更新、出一个md文件对feature的解析
 
-   
+### zzy：
+1.UA处理 参考 https://www.browserscan.net/zh/user-agent
+2.linking 论文复现
+
+### gzf：
+1.数据解析平台 数据库 or csv
+2.生成可分析数据 并展示在dashboard
+3.anti-bot rule分析
+
+### tll：
+1.前端feature的含义解释，出md文件（同ywy 4）
+2.博后带着重构数据库
